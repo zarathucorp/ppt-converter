@@ -1,0 +1,25 @@
+{
+  "title": "SVG/EMF → PPTX 转换器",
+  "description": "在保持矢量质量的同时，将 SVG、EMF 文件转换为 PowerPoint 演示文稿",
+  "upload": {
+    "area": "将 SVG/EMF 文件拖拽到此处，或点击选择文件",
+    "dropFiles": "将文件放置于此...",
+    "supportedFormats": "支持格式：.svg, .emf 文件",
+    "uploadedFiles": "已上传文件",
+    "clearAll": "全部清除",
+    "noFiles": "未上传任何文件"
+  },
+  "conversion": {
+    "convert": "转换为 PPTX",
+    "converting": "转换中...",
+    "error": "请至少上传一个文件",
+    "failed": "转换失败"
+  },
+  "howItWorks": {
+    "title": "使用方法",
+    "step1": "上传多个 SVG 或 EMF 文件",
+    "step2": "每个文件将成为 PowerPoint 中的一张幻灯片",
+    "step3": "保持矢量图形品质（无质量损失）",
+    "step4": "下载生成的 PPTX 文件"
+  }
+}

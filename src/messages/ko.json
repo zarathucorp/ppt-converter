@@ -1,0 +1,25 @@
+{
+  "title": "SVG/EMF → PPTX 변환기",
+  "description": "벡터 그래픽 품질을 유지하면서 SVG, EMF 파일을 PowerPoint 프레젠테이션으로 변환합니다",
+  "upload": {
+    "area": "SVG/EMF 파일을 여기에 드래그하거나 클릭하여 선택하세요",
+    "dropFiles": "파일을 여기에 놓으세요...",
+    "supportedFormats": "지원 형식: .svg, .emf 파일",
+    "uploadedFiles": "업로드된 파일",
+    "clearAll": "모두 삭제",
+    "noFiles": "업로드된 파일이 없습니다"
+  },
+  "conversion": {
+    "convert": "PPTX로 변환",
+    "converting": "변환 중...",
+    "error": "최소 하나 이상의 파일을 업로드해주세요",
+    "failed": "변환에 실패했습니다"
+  },
+  "howItWorks": {
+    "title": "사용 방법",
+    "step1": "여러 SVG 또는 EMF 파일을 업로드하세요",
+    "step2": "각 파일이 PowerPoint의 슬라이드가 됩니다",
+    "step3": "벡터 그래픽 품질이 보존됩니다 (화질 손실 없음)",
+    "step4": "생성된 PPTX 파일을 다운로드하세요"
+  }
+}

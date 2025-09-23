@@ -1,0 +1,25 @@
+{
+  "title": "SVG/EMF to PPTX Converter",
+  "description": "Convert your vector graphics (SVG, EMF) to PowerPoint presentation while preserving vector quality",
+  "upload": {
+    "area": "Drag and drop SVG/EMF files here, or click to select",
+    "dropFiles": "Drop the files here...",
+    "supportedFormats": "Supports: .svg, .emf files",
+    "uploadedFiles": "Uploaded Files",
+    "clearAll": "Clear All",
+    "noFiles": "No files uploaded"
+  },
+  "conversion": {
+    "convert": "Convert to PPTX",
+    "converting": "Converting...",
+    "error": "Please upload at least one file",
+    "failed": "Conversion failed"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "step1": "Upload multiple SVG or EMF files",
+    "step2": "Each file becomes a slide in the PowerPoint",
+    "step3": "Vector graphics are preserved (no quality loss)",
+    "step4": "Download the generated PPTX file"
+  }
+}

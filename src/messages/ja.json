@@ -1,0 +1,25 @@
+{
+  "title": "SVG/EMF → PPTX コンバーター",
+  "description": "ベクター品質を保持しながら、SVG、EMFファイルをPowerPointプレゼンテーションに変換します",
+  "upload": {
+    "area": "SVG/EMFファイルをここにドラッグ＆ドロップするか、クリックして選択してください",
+    "dropFiles": "ファイルをここにドロップしてください...",
+    "supportedFormats": "対応形式: .svg, .emf ファイル",
+    "uploadedFiles": "アップロードされたファイル",
+    "clearAll": "すべて削除",
+    "noFiles": "アップロードされたファイルがありません"
+  },
+  "conversion": {
+    "convert": "PPTXに変換",
+    "converting": "変換中...",
+    "error": "少なくとも1つのファイルをアップロードしてください",
+    "failed": "変換に失敗しました"
+  },
+  "howItWorks": {
+    "title": "使用方法",
+    "step1": "複数のSVGまたはEMFファイルをアップロードします",
+    "step2": "各ファイルがPowerPointのスライドになります",
+    "step3": "ベクターグラフィックスが保持されます（品質劣化なし）",
+    "step4": "生成されたPPTXファイルをダウンロードします"
+  }
+}
