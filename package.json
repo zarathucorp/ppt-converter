@@ -9,21 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@types/formidable": "^3.4.5",
-    "@types/jszip": "^3.4.0",
-    "@types/xml2js": "^0.4.14",
-    "canvas": "^3.2.0",
-    "formidable": "^3.5.4",
-    "jszip": "^3.10.1",
     "next": "15.5.3",
     "next-intl": "^4.3.9",
     "pptxgenjs": "^4.0.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-dropzone": "^14.3.8",
-    "sharp": "^0.34.4",
-    "svg2img": "^1.0.0-beta.2",
-    "xml2js": "^0.6.2"
+    "sharp": "^0.34.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -1,5 +1,4 @@
 import { getRequestConfig } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 
 // Can be imported from a shared config
@@ -23,7 +22,7 @@ export default getRequestConfig(async ({ locale }) => {
   }
 
   // Validate that the resolved locale is valid
-  if (!resolvedLocale || !locales.includes(resolvedLocale as any)) {
+  if (!resolvedLocale || !locales.includes(resolvedLocale as string)) {
     resolvedLocale = defaultLocale;
   }
 

@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import PptxGenJS from 'pptxgenjs';
-import sharp from 'sharp';
 
 async function parseFormData(request: NextRequest) {
   const formData = await request.formData();
   const files: File[] = [];
 
-  for (const [key, value] of formData.entries()) {
+  for (const [, value] of formData.entries()) {
     if (value instanceof File) {
       files.push(value);
     }
