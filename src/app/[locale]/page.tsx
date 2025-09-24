@@ -11,6 +11,14 @@ interface UploadedFile {
   preview?: string;
 }
 
+const MAX_FILE_COUNT = 10;
+const MAX_SINGLE_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_TOTAL_UPLOAD_SIZE = 4 * 1024 * 1024; // 4MB
+
+function getTotalUploadSize(items: UploadedFile[]): number {
+  return items.reduce((total, item) => total + item.file.size, 0);
+}
+
 export default function Home() {
   const t = useTranslations();
   const [files, setFiles] = useState<UploadedFile[]>([]);
@@ -26,14 +34,57 @@ export default function Home() {
   });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    const newFiles = acceptedFiles.map(file => ({
-      file,
-      preview: file.type === 'image/svg+xml' ? URL.createObjectURL(file) : undefined
-    }));
-    setFiles(prev => [...prev, ...newFiles]);
-    setError(null);
+    const filesToProcess = [...acceptedFiles];
+    let errorMessage: string | null = null;
+    const addedFiles: UploadedFile[] = [];
+
+    setFiles((prev) => {
+      const next = [...prev];
+      let totalSize = getTotalUploadSize(prev);
+      let availableSlots = MAX_FILE_COUNT - prev.length;
+
+      if (availableSlots <= 0) {
+        errorMessage = t('conversion.tooManyFiles');
+        return prev;
+      }
+
+      if (filesToProcess.length > availableSlots) {
+        errorMessage = errorMessage ?? t('conversion.tooManyFiles');
+      }
+
+      for (const file of filesToProcess.slice(0, Math.max(availableSlots, 0))) {
+        if (file.size > MAX_SINGLE_FILE_SIZE) {
+          errorMessage = errorMessage ?? t('conversion.fileTooLarge', { filename: file.name });
+          continue;
+        }
+
+        if (totalSize + file.size > MAX_TOTAL_UPLOAD_SIZE) {
+          errorMessage = errorMessage ?? t('conversion.totalSizeExceeded');
+          break;
+        }
+
+        const entry: UploadedFile = {
+          file,
+          preview: file.type === 'image/svg+xml' ? URL.createObjectURL(file) : undefined
+        };
+
+        next.push(entry);
+        addedFiles.push(entry);
+        totalSize += file.size;
+        availableSlots -= 1;
+      }
+
+      return next;
+    });
+
     setProcessingStatus('');
-  }, []);
+
+    if (errorMessage) {
+      setError(errorMessage);
+    } else if (addedFiles.length > 0) {
+      setError(null);
+    }
+  }, [t]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -62,9 +113,26 @@ export default function Home() {
       return;
     }
 
+    setProcessingStatus('');
+
+    if (files.length > MAX_FILE_COUNT) {
+      setError(t('conversion.tooManyFiles'));
+      return;
+    }
+
+    const oversizedFile = files.find((fileObj) => fileObj.file.size > MAX_SINGLE_FILE_SIZE);
+    if (oversizedFile) {
+      setError(t('conversion.fileTooLarge', { filename: oversizedFile.file.name }));
+      return;
+    }
+
+    if (getTotalUploadSize(files) > MAX_TOTAL_UPLOAD_SIZE) {
+      setError(t('conversion.totalSizeExceeded'));
+      return;
+    }
+
     setIsConverting(true);
     setError(null);
-    setProcessingStatus('');
 
     try {
       // Check for complex SVGs and show processing status

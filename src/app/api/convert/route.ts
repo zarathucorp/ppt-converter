@@ -4,6 +4,13 @@ import { optimize } from 'svgo';
 import { sanitizeSvgForPowerPoint } from '@/utils/svgSanitizer';
 import { getSvgoConfig } from '@/utils/svgoConfig';
 
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+
+const MAX_FILE_COUNT = 10;
+const MAX_SINGLE_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_TOTAL_UPLOAD_SIZE = 4 * 1024 * 1024; // 4MB
+
 async function parseFormData(request: NextRequest) {
   const formData = await request.formData();
   const files: File[] = [];
@@ -15,6 +22,10 @@ async function parseFormData(request: NextRequest) {
   }
 
   return files;
+}
+
+function getFileSize(file: File): number {
+  return typeof file.size === 'number' ? file.size : 0;
 }
 
 function sanitizeFilename(filename: string): string {
@@ -233,6 +244,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No files uploaded' }, { status: 400 });
     }
 
+    if (files.length > MAX_FILE_COUNT) {
+      return NextResponse.json(
+        { error: `Too many files uploaded. Maximum allowed is ${MAX_FILE_COUNT}.` },
+        { status: 413 }
+      );
+    }
+
+    const oversizedFile = files.find((file) => getFileSize(file) > MAX_SINGLE_FILE_SIZE);
+    if (oversizedFile) {
+      return NextResponse.json(
+        { error: `File "${oversizedFile.name}" exceeds the ${MAX_SINGLE_FILE_SIZE / (1024 * 1024)}MB limit.` },
+        { status: 413 }
+      );
+    }
+
+    const totalUploadSize = files.reduce((total, file) => total + getFileSize(file), 0);
+    if (totalUploadSize > MAX_TOTAL_UPLOAD_SIZE) {
+      return NextResponse.json(
+        { error: `Total upload size exceeds ${MAX_TOTAL_UPLOAD_SIZE / (1024 * 1024)}MB.` },
+        { status: 413 }
+      );
+    }
+
     // URL에서 설정 파라미터 가져오기
     const { searchParams } = new URL(request.url);
     const rawFilename = searchParams.get('filename') || 'converted-presentation';
@@ -296,7 +330,7 @@ export async function POST(request: NextRequest) {
         const emfData = await processEmfForPptx(fileBuffer);
 
         // EMF는 크기 정보가 없으므로 선택된 레이아웃에 맞춤
-        const emfAspectRatio = 16 / 9; // EMF 기본 가정 비율
+        // const emfAspectRatio = 16 / 9; // EMF 기본 가정 비율
         const emfImageSize = calculateOptimalImageSize(
           `<svg viewBox="0 0 1600 900" width="1600" height="900"></svg>`, // 가상 SVG로 계산
           selectedLayout
