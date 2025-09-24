@@ -35,31 +35,25 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative text-slate-200">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
+        className="flex items-center justify-center w-10 h-10 rounded-full border border-white/15 bg-slate-900/70 hover:border-white/40 hover:bg-slate-900/60 transition-colors"
+        aria-label={`Change language (current: ${currentLanguage.name})`}
       >
-        <span>{currentLanguage.flag}</span>
-        <span className="text-sm font-medium">{currentLanguage.name}</span>
-        <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <span className="text-lg leading-none">{currentLanguage.flag}</span>
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+        <div className="absolute top-full right-0 mt-2 w-52 bg-slate-900/95 border border-white/15 rounded-xl shadow-2xl shadow-black/40 backdrop-blur z-50">
           {languages.map((language) => (
             <button
               key={language.code}
               onClick={() => handleLanguageChange(language.code)}
-              className={`w-full flex items-center space-x-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                language.code === locale ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+              className={`w-full flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                language.code === locale
+                  ? 'bg-indigo-500/20 text-white'
+                  : 'text-slate-200 hover:bg-slate-800/80'
               }`}
             >
               <span>{language.flag}</span>
