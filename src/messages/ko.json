@@ -13,7 +13,25 @@
     "convert": "PPTX로 변환",
     "converting": "변환 중...",
     "error": "최소 하나 이상의 파일을 업로드해주세요",
-    "failed": "변환에 실패했습니다"
+    "failed": "변환에 실패했습니다",
+    "processingComplex": "복잡한 SVG 파일을 PowerPoint 호환성을 위해 처리 중...",
+    "processingFiles": "파일을 PowerPoint로 변환 중...",
+    "finalizing": "프레젠테이션을 완성 중...",
+    "completed": "변환이 성공적으로 완료되었습니다!"
+  },
+  "settings": {
+    "title": "변환 설정",
+    "filename": "파일명",
+    "filenamePlaceholder": "파일명 입력",
+    "quality": "품질",
+    "qualityHigh": "높음 (권장)",
+    "qualityMedium": "보통",
+    "qualityLow": "낮음",
+    "layout": "레이아웃",
+    "layoutWidescreen": "와이드스크린 (16:9)",
+    "layoutStandard": "표준 (4:3)",
+    "metadata": "메타데이터",
+    "includeFileInfo": "파일 정보 포함"
   },
   "howItWorks": {
     "title": "사용 방법",

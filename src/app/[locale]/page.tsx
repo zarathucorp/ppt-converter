@@ -3,7 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslations } from 'next-intl';
-import LanguageSwitcher from '../../components/LanguageSwitcher';
+import Image from 'next/image';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 interface UploadedFile {
   file: File;
@@ -15,6 +16,14 @@ export default function Home() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [processingStatus, setProcessingStatus] = useState<string>('');
+  const [settings, setSettings] = useState({
+    filename: 'converted-presentation',
+    // 향후 추가 옵션들을 여기에 추가 예정
+    // imageQuality: 'high',
+    // slideLayout: 'widescreen',
+    // includeMetadata: true
+  });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles = acceptedFiles.map(file => ({
@@ -23,6 +32,7 @@ export default function Home() {
     }));
     setFiles(prev => [...prev, ...newFiles]);
     setError(null);
+    setProcessingStatus('');
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -54,14 +64,32 @@ export default function Home() {
 
     setIsConverting(true);
     setError(null);
+    setProcessingStatus('');
 
     try {
+      // Check for complex SVGs and show processing status
+      const hasComplexSvg = files.some(fileObj =>
+        fileObj.file.name.toLowerCase().endsWith('.svg') &&
+        fileObj.file.size > 50000 // Files larger than 50KB might be complex
+      );
+
+      if (hasComplexSvg) {
+        setProcessingStatus(t('conversion.processingComplex'));
+      } else {
+        setProcessingStatus(t('conversion.processingFiles'));
+      }
+
       const formData = new FormData();
       files.forEach((fileObj, index) => {
         formData.append(`file_${index}`, fileObj.file);
       });
 
-      const response = await fetch('/api/convert', {
+      // 설정 정보를 URL 파라미터로 전달
+      const params = new URLSearchParams({
+        filename: settings.filename
+      });
+
+      const response = await fetch(`/api/convert?${params.toString()}`, {
         method: 'POST',
         body: formData,
       });
@@ -71,18 +99,24 @@ export default function Home() {
         throw new Error(errorData.error || t('conversion.failed'));
       }
 
+      setProcessingStatus(t('conversion.finalizing'));
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'converted-presentation.pptx';
+      a.download = `${settings.filename}.pptx`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
+      setProcessingStatus(t('conversion.completed'));
+      setTimeout(() => setProcessingStatus(''), 2000);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      setProcessingStatus('');
     } finally {
       setIsConverting(false);
     }
@@ -96,6 +130,9 @@ export default function Home() {
     });
     setFiles([]);
     setError(null);
+    setProcessingStatus('');
+    // 파일명을 기본값으로 리셋 (필요시)
+    setSettings(prev => ({ ...prev, filename: 'converted-presentation' }));
   };
 
   return (
@@ -189,10 +226,13 @@ export default function Home() {
                     </button>
                     {fileObj.preview && (
                       <div className="mb-2">
-                        <img
+                        <Image
                           src={fileObj.preview}
                           alt={fileObj.file.name}
+                          width={256}
+                          height={96}
                           className="w-full h-24 object-contain bg-white rounded"
+                          unoptimized
                         />
                       </div>
                     )}
@@ -201,12 +241,89 @@ export default function Home() {
                     </p>
                     <p className="text-xs text-gray-500">
                       {(fileObj.file.size / 1024).toFixed(1)} KB
+                      {fileObj.file.name.toLowerCase().endsWith('.svg') && fileObj.file.size > 50000 && (
+                        <span className="ml-2 text-blue-600 font-medium">Complex</span>
+                      )}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
           )}
+
+          {/* Processing Status */}
+          {processingStatus && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-600 flex items-center">
+                <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {processingStatus}
+              </p>
+            </div>
+          )}
+
+          {/* Settings Section */}
+          <div className="mt-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              {t('settings.title')}
+            </h3>
+            <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+              {/* Filename Setting */}
+              <div className="flex items-center space-x-4">
+                <label htmlFor="filename" className="flex-shrink-0 text-sm font-medium text-gray-700 w-20">
+                  {t('settings.filename')}:
+                </label>
+                <div className="flex-1 flex items-center space-x-2">
+                  <input
+                    type="text"
+                    id="filename"
+                    value={settings.filename}
+                    onChange={(e) => setSettings(prev => ({ ...prev, filename: e.target.value }))}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder={t('settings.filenamePlaceholder')}
+                  />
+                  <span className="text-sm text-gray-500">.pptx</span>
+                </div>
+              </div>
+
+              {/* Future Options - Hidden but Ready for Implementation */}
+              {/*
+              <div className="flex items-center space-x-4">
+                <label className="flex-shrink-0 text-sm font-medium text-gray-700 w-20">
+                  {t('settings.quality')}:
+                </label>
+                <select className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                  <option>{t('settings.qualityHigh')}</option>
+                  <option>{t('settings.qualityMedium')}</option>
+                  <option>{t('settings.qualityLow')}</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <label className="flex-shrink-0 text-sm font-medium text-gray-700 w-20">
+                  {t('settings.layout')}:
+                </label>
+                <select className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                  <option>{t('settings.layoutWidescreen')}</option>
+                  <option>{t('settings.layoutStandard')}</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <label className="flex-shrink-0 text-sm font-medium text-gray-700 w-20">
+                  {t('settings.metadata')}:
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="checkbox" className="rounded border-gray-300" defaultChecked />
+                  <span className="text-sm text-gray-600">{t('settings.includeFileInfo')}</span>
+                </label>
+              </div>
+              */}
+
+            </div>
+          </div>
 
           {/* Error Message */}
           {error && (
@@ -226,29 +343,7 @@ export default function Home() {
                   : 'bg-blue-600 text-white hover:bg-blue-700'
                 }`}
             >
-              {isConverting ? (
-                <div className="flex items-center space-x-2">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                      className="opacity-25"
-                    />
-                    <path
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      className="opacity-75"
-                    />
-                  </svg>
-                  <span>{t('conversion.converting')}</span>
-                </div>
-              ) : (
-                t('conversion.convert')
-              )}
+              {isConverting ? t('conversion.converting') : t('conversion.convert')}
             </button>
           </div>
         </div>

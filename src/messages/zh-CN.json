@@ -13,7 +13,25 @@
     "convert": "转换为 PPTX",
     "converting": "转换中...",
     "error": "请至少上传一个文件",
-    "failed": "转换失败"
+    "failed": "转换失败",
+    "processingComplex": "正在处理复杂的 SVG 文件以兼容 PowerPoint...",
+    "processingFiles": "正在将文件转换为 PowerPoint...",
+    "finalizing": "正在完成演示文稿...",
+    "completed": "转换成功完成！"
+  },
+  "settings": {
+    "title": "转换设置",
+    "filename": "文件名",
+    "filenamePlaceholder": "输入文件名",
+    "quality": "质量",
+    "qualityHigh": "高（推荐）",
+    "qualityMedium": "中",
+    "qualityLow": "低",
+    "layout": "布局",
+    "layoutWidescreen": "宽屏（16:9）",
+    "layoutStandard": "标准（4:3）",
+    "metadata": "元数据",
+    "includeFileInfo": "包含文件信息"
   },
   "howItWorks": {
     "title": "使用方法",

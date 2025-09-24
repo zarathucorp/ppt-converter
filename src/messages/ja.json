@@ -13,7 +13,25 @@
     "convert": "PPTXに変換",
     "converting": "変換中...",
     "error": "少なくとも1つのファイルをアップロードしてください",
-    "failed": "変換に失敗しました"
+    "failed": "変換に失敗しました",
+    "processingComplex": "複雑なSVGファイルをPowerPoint互換性のため処理中...",
+    "processingFiles": "ファイルをPowerPointに変換中...",
+    "finalizing": "プレゼンテーションを完成中...",
+    "completed": "変換が正常に完了しました！"
+  },
+  "settings": {
+    "title": "変換設定",
+    "filename": "ファイル名",
+    "filenamePlaceholder": "ファイル名を入力",
+    "quality": "品質",
+    "qualityHigh": "高（推奨）",
+    "qualityMedium": "中",
+    "qualityLow": "低",
+    "layout": "レイアウト",
+    "layoutWidescreen": "ワイドスクリーン（16:9）",
+    "layoutStandard": "標準（4:3）",
+    "metadata": "メタデータ",
+    "includeFileInfo": "ファイル情報を含める"
   },
   "howItWorks": {
     "title": "使用方法",

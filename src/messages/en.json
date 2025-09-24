@@ -13,7 +13,25 @@
     "convert": "Convert to PPTX",
     "converting": "Converting...",
     "error": "Please upload at least one file",
-    "failed": "Conversion failed"
+    "failed": "Conversion failed",
+    "processingComplex": "Processing complex SVG files for PowerPoint compatibility...",
+    "processingFiles": "Converting files to PowerPoint...",
+    "finalizing": "Finalizing presentation...",
+    "completed": "Conversion completed successfully!"
+  },
+  "settings": {
+    "title": "Conversion Settings",
+    "filename": "Filename",
+    "filenamePlaceholder": "Enter filename",
+    "quality": "Quality",
+    "qualityHigh": "High (Recommended)",
+    "qualityMedium": "Medium",
+    "qualityLow": "Low",
+    "layout": "Layout",
+    "layoutWidescreen": "Widescreen (16:9)",
+    "layoutStandard": "Standard (4:3)",
+    "metadata": "Metadata",
+    "includeFileInfo": "Include file information"
   },
   "howItWorks": {
     "title": "How it works",
