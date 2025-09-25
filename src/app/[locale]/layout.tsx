@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -34,6 +35,7 @@ export default async function LocaleLayout({
   params
 }: Props) {
   const { locale } = await params;
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
   // Validate that the incoming `locale` parameter is valid
   // if (!locales.includes(locale as any)) notFound();
@@ -50,6 +52,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
