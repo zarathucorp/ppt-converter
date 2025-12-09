@@ -13,7 +13,7 @@
     "@types/jsdom": "^21.1.7",
     "dompurify": "^3.2.7",
     "jsdom": "^27.0.0",
-    "next": "15.5.3",
+    "next": "15.5.7",
     "next-intl": "^4.3.9",
     "pptxgenjs": "^4.0.1",
     "react": "19.1.0",
